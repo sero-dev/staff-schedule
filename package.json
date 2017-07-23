@@ -1,0 +1,19 @@
+{
+  "name": "staff-schedule",
+  "version": "1.0.0",
+  "description": "Creates work schedule inside Google Calendar based on Excel Sheet",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sero-dev/staff-schedule.git"
+  },
+  "author": "Sero-Dev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sero-dev/staff-schedule/issues"
+  },
+  "homepage": "https://github.com/sero-dev/staff-schedule#readme"
+}
