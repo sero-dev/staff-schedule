@@ -15,11 +15,10 @@ try:
 except ImportError:
     flags = None
 
-# If modifying these scopes, delete your previously saved credentials
-# at ~/.credentials/calendar-python-quickstart.json
-SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
+
+SCOPES = 'https://www.googleapis.com/auth/calendar'
 CLIENT_SECRET_FILE = 'client_secret.json'
-APPLICATION_NAME = 'Google Calendar API Python Quickstart'
+APPLICATION_NAME = 'Staff Schedule Application'
 
 
 def get_credentials():
@@ -36,7 +35,7 @@ def get_credentials():
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
     credential_path = os.path.join(credential_dir,
-                                   'calendar-python-quickstart.json')
+                                   'staff-schedule.json')
 
     store = Storage(credential_path)
     credentials = store.get()
@@ -51,27 +50,31 @@ def get_credentials():
     return credentials
 
 def main():
-    """Shows basic usage of the Google Calendar API.
 
-    Creates a Google Calendar API service object and outputs a list of the next
-    10 events on the user's calendar.
-    """
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
 
-    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-    print('Getting the upcoming 10 events')
-    eventsResult = service.events().list(
-        calendarId='primary', timeMin=now, maxResults=10, singleEvents=True,
-        orderBy='startTime').execute()
-    events = eventsResult.get('items', [])
+    eventInfo = {
+      'summary': 'QBPL Cyber Center',
+      'location': 'Queens Library (Central) 89-11 Merrick Blvd, Jamaica, NY 11432',
+      'start': {
+        'dateTime': '2017-07-26T08:30:00-04:00',
+        'timeZone': 'America/New_York',
+      },
+      'end': {
+        'dateTime': '2017-07-26T16:30:00-04:00',
+        'timeZone': 'America/New_York',
+      },
+      'reminders': {
+        'useDefault': False,
+        'overrides': [
+          {'method': 'popup', 'minutes': 60},
+        ],
+      },
+    }
 
-    if not events:
-        print('No upcoming events found.')
-    for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        print(start, event['summary'])
+    event = service.events().insert(calendarId='primary', body=eventInfo).execute()
 
 
 if __name__ == '__main__':
