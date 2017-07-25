@@ -41,33 +41,10 @@ def get_credentials():
         print('Storing credentials to ' + credential_path)
     return credentials
 
-def main():
+def bookEvent(event):
 
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
 
-    eventInfo = {
-      'summary': 'QBPL Cyber Center',
-      'location': 'Queens Library (Central) 89-11 Merrick Blvd, Jamaica, NY 11432',
-      'start': {
-        'dateTime': '2017-07-26T08:30:00-04:00',
-        'timeZone': 'America/New_York',
-      },
-      'end': {
-        'dateTime': '2017-07-26T16:30:00-04:00',
-        'timeZone': 'America/New_York',
-      },
-      'reminders': {
-        'useDefault': False,
-        'overrides': [
-          {'method': 'popup', 'minutes': 60},
-        ],
-      },
-    }
-
-    event = service.events().insert(calendarId='primary', body=eventInfo).execute()
-
-
-if __name__ == '__main__':
-    main()
+    service.events().insert(calendarId='primary', body=event).execute()
