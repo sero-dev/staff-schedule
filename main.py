@@ -1,11 +1,8 @@
 import insertEvent
 import openpyxl
-import os
-
-path = os.getcwd();
 
 months = {  "January" : "01",
-            "Feburary" : "02",
+            "February" : "02",
             "March" : "03",
             "April" : "04",
             "May" : "05",
@@ -38,7 +35,6 @@ def getEnd(period):
 # Converts time in standard time format for Google Calendar API, then books event
 def convertTime(week, day):
       if week[day].value != None and week[day].value != "OFF":
-          print(day)
           date = week[day[0] + '5'].value.rsplit(". ", 1)[1]
           if(date[0] == " ") :
               date = date[1:3]
