@@ -36,9 +36,9 @@ def getEnd(period):
         return str(hour + 12) + ':' + period.rsplit(':', 1)[1] + ':00'
 
 # Converts time in standard time format for Google Calendar API, then books event
-def convertTime(week, day, weekday):
-      if not (week[day].value == None or week[day].value == "OFF"):
-
+def convertTime(week, day):
+      if week[day].value != None and week[day].value != "OFF":
+          print(day)
           date = week[day[0] + '5'].value.rsplit(". ", 1)[1]
           if(date[0] == " ") :
               date = date[1:3]
@@ -100,10 +100,10 @@ month2 = week['A3'].value.rsplit(' - ', 1)[1].rsplit(', ', 1)[0]
 month1 = month1[:-3]
 month2 = month2[:-3]
 
-convertTime(week,'C16', 0)
-convertTime(week,'E16', 1)
-convertTime(week,'G16', 2)
-convertTime(week,'I16', 3)
-convertTime(week,'K16', 4)
-convertTime(week,'M16', 5)
-convertTime(week,'O16', 6)
+convertTime(week,'C16')
+convertTime(week,'E16')
+convertTime(week,'G16')
+convertTime(week,'I16')
+convertTime(week,'K16')
+convertTime(week,'M16')
+convertTime(week,'O16')
