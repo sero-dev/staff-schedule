@@ -17,6 +17,7 @@ months = {  "January" : "01",
             "November" : "11",
             "December" : "12" }
 
+# Converts start time to military time and adds seconds to the end
 def getStart(period):
     hour = int(period.rsplit(':', 1)[0])
 
@@ -25,6 +26,7 @@ def getStart(period):
     else:
         return str(hour + 12) + ':' + period.rsplit(':', 1)[1] + ':00'
 
+# Converts end time to military time and adds seconds to the end
 def getEnd(period):
     hour = int(period.rsplit(':', 1)[0])
 
@@ -33,32 +35,45 @@ def getEnd(period):
     else:
         return str(hour + 12) + ':' + period.rsplit(':', 1)[1] + ':00'
 
+# Converts time in standard time format for Google Calendar API, then books event
 def convertTime(week, day, weekday):
       if not (week[day].value == None or week[day].value == "OFF"):
 
           date = week[day[0] + '5'].value.rsplit(". ", 1)[1]
           if(date[0] == " ") :
               date = date[1:3]
-          print(date)
 
           start = getStart(week[day].value.rsplit('-', 1)[0])
           end = getEnd(week[day].value.rsplit('-', 1)[1])
 
-          start = year + "-" + months[month1] + "-" + date + "T" + start + "-04:00"
-          end = year + "-" + months[month1] + "-" + date + "T" + end + "-04:00"
+          # Adds 0 in front of single digit hours
+          if(start[0] != '1') :
+              start = "0" + start
 
-          print(start)
-          print(end)
+          # Adds 0 in front of single digit hours
+          if(end[0] != '1') :
+              end = "0" + end
 
+          # Decides whether to use the first month or the second month
+          if(int(date) < 7) :
+              month = month2
+          else :
+              month = month1
+
+          # Sets up correct time format for Google Calendar API JSON file
+          start = year + "-" + months[month] + "-" + date + "T" + start + "-04:00"
+          end = year + "-" + months[month] + "-" + date + "T" + end + "-04:00"
+
+          # Event JSON file
           eventInfo = {
             'summary': 'QBPL Cyber Center',
             'location': 'Queens Library (Central) 89-11 Merrick Blvd, Jamaica, NY 11432',
             'start': {
-              'dateTime': '2017-07-26T' + start + '-04:00',
+              'dateTime': start,
               'timeZone': 'America/New_York',
             },
             'end': {
-              'dateTime': '2017-07-26T' + end + '-04:00',
+              'dateTime': end,
               'timeZone': 'America/New_York',
             },
             'reminders': {
@@ -69,15 +84,19 @@ def convertTime(week, day, weekday):
             },
           }
 
+          # Creates event for Google Calendar
           insertEvent.bookEvent(eventInfo)
+          print("Event created: Success!")
 
 week = openpyxl.load_workbook('week.xlsx')
 week = week.get_sheet_by_name('Sheet1')
 
+# Gets year and months from workbook
 year = week['A3'].value.rsplit(', ', 1)[1]
 month1 = week['A3'].value.rsplit(' - ', 1)[0]
 month2 = week['A3'].value.rsplit(' - ', 1)[1].rsplit(', ', 1)[0]
 
+# Trims numbers at the end of the month
 month1 = month1[:-3]
 month2 = month2[:-3]
 
